@@ -15,7 +15,7 @@ export interface Card {
   cardholderName: string;
   securityCode: string;
   expirationDate: string;
-  password?: string;
+  password?: string | null;
   isVirtual: boolean;
   originalCardId?: number | null;
   isBlocked: boolean;
@@ -39,16 +39,13 @@ export async function findById(id: number) {
   return result.rows[0];
 }
 
-export async function findByTypeAndEmployeeId(
-  type: TransactionTypes,
-  employeeId: number
-) {
-  const result = await dbConnection.query<Card, [TransactionTypes, number]>(
+export async function findByTypeAndEmployeeId(type: TransactionTypes, employeeId: number) {
+  const { rowCount, rows } = await dbConnection.query<Card, [TransactionTypes, number]>(
     `SELECT * FROM cards WHERE type=$1 AND "employeeId"=$2`,
     [type, employeeId]
   );
 
-  return result.rows[0];
+  return { rowCount, rows };
 }
 
 export async function findByCardDetails(
@@ -117,6 +114,12 @@ export async function update(id: number, cardData: CardUpdateData) {
   `,
     [id, ...cardValues]
   );
+}
+
+export const activateCard = async (id:number, password: string) => {
+  const sql = `UPDATE cards SET password=$1, "isBlocked"=$2 WHERE id=$3`;
+  const { rowCount } = await dbConnection.query(sql, [password, false, id]);
+  return { rowCount };
 }
 
 export async function remove(id: number) {

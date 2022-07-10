@@ -1,7 +1,7 @@
 import { validateCardSchema } from "./validationSchemas";
 
-export const validateCardType = (cardType: string, cardPassword: number) => {
-    const { error } = validateCardSchema.validate({ cardType, cardPassword });
+export const validateCardType = (cardType: string) => {
+    const { error } = validateCardSchema.validate({ cardType });
     if(error){
         const { message } = error;
         return { status: false, message };

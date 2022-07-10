@@ -15,8 +15,7 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
                     res.locals.data = {
                         ...body, 
                         name: employee.rows[0].fullName, 
-                        employeeId: employee.rows[0].id, 
-                        companyId: company.rows[0].id
+                        employeeId: employee.rows[0].id
                     };
                     next();
                     return;

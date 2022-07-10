@@ -4,6 +4,8 @@ import {
     findByTypeAndEmployeeId,
     findByCardDetails, 
     activateCard,
+    lockCard,
+    unlockCard,
     insert as insertCard, 
     update, 
     remove 
@@ -15,7 +17,8 @@ import { findByCardId, insert as insertPayment } from './paymentRepository';
 import { findByCardId as findRechargeByCardId, insert as insertRecharge } from "./rechargeRepository";
 
 export const cardRepository = {
-    find, findCardById, findByTypeAndEmployeeId, activateCard, findByCardDetails, insertCard, update, remove
+    find, findCardById, findByTypeAndEmployeeId, activateCard, lockCard, unlockCard, findByCardDetails, 
+    insertCard, update, remove
 }
 
 export const businessRepository = { findBusinessById };

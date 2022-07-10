@@ -22,7 +22,7 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
                 }
             }
         }
-        res.sendStatus(401);
+        res.status(401).send('you must have a api key.');
     }catch(e: any){
         console.log(e.message);
         res.sendStatus(500);

@@ -4,7 +4,7 @@ import { validateCardType } from "../utils/validationFunctions";
 
 const authCardMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const { data } = res.locals;
-    const { cardType, employeeId } = data;
+    const { cardType, employeeId } = data; //adicionar condição para não permitir ativação de cartão expirado (data)
     try{
         const validation = validateCardType(cardType);
         if(validation.status){

@@ -106,7 +106,7 @@ export async function update(id: number, cardData: CardUpdateData) {
       offset: 2,
     });
 
-    dbConnection.query(
+  dbConnection.query(
     `
     UPDATE cards
       SET ${cardColumns}
@@ -116,9 +116,21 @@ export async function update(id: number, cardData: CardUpdateData) {
   );
 }
 
-export const activateCard = async (id:number, password: string) => {
+export const activateCard = async (id: number, password: string) => {
   const sql = `UPDATE cards SET password=$1, "isBlocked"=$2 WHERE id=$3`;
   const { rowCount } = await dbConnection.query(sql, [password, false, id]);
+  return { rowCount };
+}
+
+export const unlockCard = async (id: number) => {
+  const sql = `UPDATE cards SET "isBlocked"=$1 WHERE id=$2`;
+  const { rowCount } = await dbConnection.query(sql, [false, id]);
+  return { rowCount };
+}
+
+export const lockCard = async (id: number) => {
+  const sql = `UPDATE cards SET "isBlocked"=$1 WHERE id=$2`;
+  const { rowCount } = await dbConnection.query(sql, [true, id]);
   return { rowCount };
 }
 

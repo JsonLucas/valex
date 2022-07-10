@@ -6,8 +6,8 @@ export const encryptCardPassword = (password: string) => {
 } 
 
 export const decryptCardPassword = (password: string) => {
-    const encrypt = new cryptr(password);
-    return encrypt.decrypt(password);
+    const decrypt = new cryptr(password);
+    return decrypt.decrypt(password);
 } 
 
 export const encryptCardSecurityCode = (securityCode: string) => {

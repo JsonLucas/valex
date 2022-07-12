@@ -5,7 +5,5 @@ export const generateCardNumber = () => {
 } 
 
 export const generateCardSecurityCode = () => {
-    const cvv = faker.finance.creditCardCVV();
-    console.log(cvv);
-    return cvv;
+    return faker.finance.creditCardCVV();
 }

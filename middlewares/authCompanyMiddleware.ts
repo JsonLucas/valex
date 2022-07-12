@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { companyRepository, employeeRepository } from "../repositories";
 
-const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+const authCompanyMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const { apikey } = req.headers; // zadKLNx.DzvOVjQH01TumGl2urPjPQSxUbf67vs0
     const { body } = req;
     try{
@@ -10,7 +10,6 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
             if(company.rowCount > 0){
                 const employee = await employeeRepository.verifyEmployee(body.email, company.rows[0].id);
                 if(employee.rowCount > 0){
-                    res.locals.company = company.rows[0];
                     res.locals.data = {
                         ...body, 
                         name: employee.rows[0].fullName, 
@@ -28,4 +27,4 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
     }
 }
 
-export default authMiddleware;
+export default authCompanyMiddleware;

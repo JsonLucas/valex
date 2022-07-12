@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { cardRepository } from "../repositories";
 
 const verifyBlockedCardMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const { data } = res.locals; //card cvv 862 -> teste
+    const { data } = res.locals;
     const { cardType, employeeId, password } = data;
     try {
         const { rowCount, rows } = await cardRepository.findByTypeAndEmployeeId(cardType, employeeId);

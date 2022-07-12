@@ -9,12 +9,12 @@ export interface Recharge {
 export type RechargeInsertData = Omit<Recharge, "id" | "timestamp">;
 
 export async function findByCardId(cardId: number) {
-  const result = await dbConnection.query<Recharge, [number]>(
+  const { rowCount, rows } = await dbConnection.query<Recharge, [number]>(
     `SELECT * FROM recharges WHERE "cardId"=$1`,
     [cardId]
   );
 
-  return result.rows;
+  return { rowCount, rows };
 }
 
 export async function insert(rechargeData: RechargeInsertData) {
@@ -27,7 +27,7 @@ export async function insert(rechargeData: RechargeInsertData) {
 }
 
 export const calculateCardBalance = async (id: number) => {
-  const sql = `SELECT SUM(amount) FROM recharges WHERE id=$1`;
+  const sql = `SELECT SUM(amount) FROM recharges WHERE "cardId"=$1`;
   const { rows } = await dbConnection.query(sql, [id]);
   return { sum: rows[0].sum };
 }

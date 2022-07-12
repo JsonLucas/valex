@@ -24,7 +24,7 @@ const createCardController = async (req: Request, res: Response) => {
             type: cardType
         };
         await cardRepository.insertCard(insertCardData);
-        res.sendStatus(201); 
+        res.status(201).send('card created'); 
     }catch(e: any){
         console.log(e.message);
         res.sendStatus(500);

@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
+import { cardRepository } from "../repositories";
 
-const blockCardController = async (req: Request, res: Response) => { //alterar
+const unlockCardController = async (req: Request, res: Response) => {
     try{
         const { data } = res.locals;
-        console.log(data);
+        await cardRepository.unlockCard(data.card.id);
         res.sendStatus(200);
     }catch(e: any){
         console.log(e.message);
@@ -11,4 +12,4 @@ const blockCardController = async (req: Request, res: Response) => { //alterar
     }
 }
 
-export default blockCardController;
+export default unlockCardController;

@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import rechargeCardController from '../../controllers/rechargeCardController';
-import authMiddleware from '../../middlewares/authMiddleware';
+import authCompanyMiddleware from '../../middlewares/authCompanyMiddleware';
 import verifyActiveCardMiddleware from '../../middlewares/verifyActiveCardMiddleware';
 import verifyExpiredCardMiddleware from '../../middlewares/verifyExpiredCardMiddleware';
 
 const rechargesRouter = Router();
 
-rechargesRouter.post('/recharge-card', authMiddleware, verifyActiveCardMiddleware, verifyExpiredCardMiddleware, rechargeCardController);
+rechargesRouter.post('/recharge-card', authCompanyMiddleware, verifyActiveCardMiddleware, 
+verifyExpiredCardMiddleware, rechargeCardController);
 export default rechargesRouter;

@@ -1,29 +1,31 @@
 import { Router } from "express";
 import activateCardController from "../../controllers/activateCardController";
-import blockCardController from "../../controllers/blockCardController";
 import cardBalanceController from "../../controllers/cardBalanceController";
 import createCardController from "../../controllers/createCardController";
 import authCardMiddleware from "../../middlewares/authCardMiddleware";
-import authMiddleware from "../../middlewares/authMiddleware";
+import authEmployeeMiddleware from "../../middlewares/authEmployeeMiddleware";
+import authCompanyMiddleware from "../../middlewares/authCompanyMiddleware";
 import calculateCardBalanceMiddleware from "../../middlewares/calculateCardBalanceMiddleware";
 import verifyActiveCardMiddleware from "../../middlewares/verifyActiveCardMiddleware";
 import verifyBlockedCardMiddleware from "../../middlewares/verifyBlockedCardMiddleware";
 import verifyExpiredCardMiddleware from "../../middlewares/verifyExpiredCardMiddleware";
+import lockCardController from "../../controllers/lockCardController";
+import unlockCardController from "../../controllers/unlockCardController";
 
 const cardRouter = Router();
 
-cardRouter.post('/create-card', authMiddleware, authCardMiddleware, createCardController);
+cardRouter.post('/create-card', authCompanyMiddleware, authCardMiddleware, createCardController);
 
-cardRouter.put('/card-activation', authMiddleware, verifyBlockedCardMiddleware, verifyExpiredCardMiddleware, 
-activateCardController); //ativa cartão
+cardRouter.put('/card-activation', authEmployeeMiddleware, verifyBlockedCardMiddleware, 
+verifyExpiredCardMiddleware, activateCardController); 
 
-cardRouter.put('/unlock-card', authMiddleware, verifyBlockedCardMiddleware, verifyExpiredCardMiddleware, 
-blockCardController); //desbloqueia cartão
+cardRouter.put('/unlock-card', authEmployeeMiddleware, verifyBlockedCardMiddleware, 
+verifyExpiredCardMiddleware, unlockCardController); 
 
-cardRouter.put('/lock-card', authMiddleware, verifyActiveCardMiddleware, verifyExpiredCardMiddleware, 
-blockCardController);
+cardRouter.put('/lock-card', authEmployeeMiddleware, verifyActiveCardMiddleware, 
+verifyExpiredCardMiddleware, lockCardController);
 
-cardRouter.get('/transactions', authMiddleware, calculateCardBalanceMiddleware, cardBalanceController);
+cardRouter.get('/transactions', authEmployeeMiddleware, calculateCardBalanceMiddleware, cardBalanceController);
 //trocar esse auth middleware
 
 export default cardRouter;

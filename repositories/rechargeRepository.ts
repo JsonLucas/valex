@@ -19,9 +19,15 @@ export async function findByCardId(cardId: number) {
 
 export async function insert(rechargeData: RechargeInsertData) {
   const { cardId, amount } = rechargeData;
-
-  dbConnection.query<any, [number, number]>(
+  const { rowCount } = await dbConnection.query<any, [number, number]>(
     `INSERT INTO recharges ("cardId", amount) VALUES ($1, $2)`,
     [cardId, amount]
   );
+  return { rowCount };
+}
+
+export const calculateCardBalance = async (id: number) => {
+  const sql = `SELECT SUM(amount) FROM recharges WHERE id=$1`;
+  const { rows } = await dbConnection.query(sql, [id]);
+  return { sum: rows[0].sum };
 }

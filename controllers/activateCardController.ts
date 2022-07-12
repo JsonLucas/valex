@@ -4,8 +4,8 @@ import { encryptCardPassword } from "../utils/encryptUtils";
 
 const activateCardController = async (req: Request, res: Response) => {
     try{
-        const { cardData } = res.locals;
-        const { card, password } = cardData;
+        const { data } = res.locals;
+        const { card, password } = data;
         const { rowCount } = await cardRepository.activateCard(card.id, encryptCardPassword(password));
         if(rowCount > 0){
             res.sendStatus(200);

@@ -31,12 +31,12 @@ export async function find() {
 }
 
 export async function findById(id: number) {
-  const result = await dbConnection.query<Card, [number]>(
+  const { rowCount, rows } = await dbConnection.query<Card, [number]>(
     "SELECT * FROM cards WHERE id=$1",
     [id]
   );
 
-  return result.rows[0];
+  return { rowCount, rows };
 }
 
 export async function findByTypeAndEmployeeId(type: TransactionTypes, employeeId: number) {

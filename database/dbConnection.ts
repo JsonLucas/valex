@@ -3,7 +3,10 @@ import { connectionString } from '../utils/envConfig';
 
 const { Pool } = pg;
 const dbConnection = new Pool({
-    connectionString: connectionString
+    connectionString: connectionString,
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
 export default dbConnection;

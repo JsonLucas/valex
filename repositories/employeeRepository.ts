@@ -1,4 +1,4 @@
-import dbConnection from "../database/dbConnection";
+import prisma from "../database/database";
 
 export interface Employee {
   id: number;
@@ -9,23 +9,22 @@ export interface Employee {
 }
 
 export async function findById(id: number) {
-  const {rowCount, rows} = await dbConnection.query<Employee, [number]>(
-    "SELECT * FROM employees WHERE id=$1",
-    [id]
-  );
-
-  return { rowCount, rows };
+  const employee = await prisma.employees.findUnique({
+    where:{ id }
+  });
+  return employee;
 }
 
 export const findByEmail = async (email: string) => {
-  const sql = `SELECT * FROM employees WHERE email=$1`;
-  const { rowCount, rows } = await dbConnection.query<Employee>(sql, [email]);
-  return { rowCount, rows };
+  const employee = await prisma.employees.findUnique({
+    where: { email }
+  });
+  return employee;
 }
 
 export const verifyEmployee = async (email: string, id: number) => {
-  const sql = `SELECT * FROM employees JOIN companies ON employees."companyId"="companies"."id" 
-  WHERE employees."email"=$1 AND "companies"."id"=$2`;
-  const { rowCount, rows } = await dbConnection.query(sql, [email, id]);
-  return { rowCount, rows };
+  const employee = await prisma.employees.findFirst({
+    where: { email, companyId: id }
+  });
+  return employee;
 }

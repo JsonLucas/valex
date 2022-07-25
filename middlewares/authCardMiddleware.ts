@@ -5,22 +5,13 @@ import { validateCardType } from "../utils/validationFunctions";
 const authCardMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const { data } = res.locals;
     const { cardType, employeeId } = data;
-    try{
-        const validation = validateCardType(cardType);
-        if(validation.status){
-            const { rowCount } = await cardRepository.findByTypeAndEmployeeId(cardType, employeeId);
-            if(rowCount === 0){
-                next();
-                return;
-            }
-            res.status(400).send(`you already have a card of type "${cardType}".`);
-            return;
-        }
-        res.status(400).send(validation.message)
-    }catch(e: any){
-        console.log(e.message);
-        res.sendStatus(500);
-    }
+    const {status, message} = validateCardType(cardType);
+    if (!status) throw { code: 422, error: message };
+
+    const card = await cardRepository.findByTypeAndEmployeeId(cardType, employeeId);
+    if (card) throw { code: 409, error: `you already have a card of type "${cardType}".` };
+
+    next();
 }
 
 export default authCardMiddleware;

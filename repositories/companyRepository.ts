@@ -1,4 +1,4 @@
-import dbConnection from "../database/dbConnection";
+import prisma from "../database/database";
 
 export interface Company {
   id: number;
@@ -7,10 +7,8 @@ export interface Company {
 }
 
 export async function findByApiKey(apiKey: string) {
-  const { rowCount, rows } = await dbConnection.query<Company, [string]>(
-    `SELECT * FROM companies WHERE "apiKey"=$1`,
-    [apiKey]
-  );
-
-  return { rowCount, rows };
+  const company = await prisma.companies.findUnique({
+    where: { apiKey }
+  });
+  return company;
 }

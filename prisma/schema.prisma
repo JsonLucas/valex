@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model companies {
+  id Int @id @default(autoincrement())
+  name String @unique
+  login String
+  password String
+  apiKey String @unique
+  employee employees[]
+}
+
+model employees {
+  id Int @id @default(autoincrement())
+  name String @unique
+  password String
+  cpf String @unique
+  email String @unique
+  companyId Int
+  company companies @relation(fields: [companyId], references: [id])
+  card cards[]
+}
+
+model cards {
+  id Int @id @default(autoincrement())
+  employeeId Int 
+  number String
+  cardholderName String
+  securityCode String
+  expirationDate String
+  password String @default("")
+  isVirtual Boolean 
+  isBlocked Boolean @default(false)
+  type String
+  employee employees @relation(fields: [employeeId], references: [id])
+  payments payments[]
+  recharges recharges[]
+}
+
+model businesses {
+  id Int @id @default(autoincrement())
+  name String
+  type String
+  payments payments[]
+}
+
+model payments {
+  id Int @id @default(autoincrement())
+  cardId Int
+  businessesId Int
+  timestamp DateTime @default(now())
+  amount Float
+  cards cards @relation(fields: [cardId], references: [id])
+  businesses businesses @relation(fields: [businessesId], references: [id])
+}
+
+model recharges {
+  id Int @id @default(autoincrement())
+  cardId Int 
+  timestamp DateTime @default(now())
+  amount Float
+  cards cards @relation(fields: [cardId], references: [id])
+}

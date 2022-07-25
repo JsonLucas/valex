@@ -8,18 +8,18 @@ const authEmployeeMiddleware = async (req: Request, res: Response, next: NextFun
         let queryEmail;
         if(body.email){ queryEmail = body.email }
         else if(email){ queryEmail = email }
-        const { rowCount, rows } = await employeeRepository.findByEmail(queryEmail);
-        if (rowCount > 0) {
+        const employee = await employeeRepository.findByEmail(queryEmail);
+        if (employee) {
             if (Object.keys(body).length !== 0) {
                 res.locals.data = {
-                    employeeId: rows[0].id,
+                    employeeId: employee.id,
                     password: body.password,
                     cardType: body.cardType,
                     businessId: body.businessId,
                     purchaseValue: body.purchaseValue
                 };
             } else {
-                res.locals.data = { employeeId: rows[0].id, card: { id } };
+                res.locals.data = { employeeId: employee.id, card: { id } };
             }
             next();
             return;

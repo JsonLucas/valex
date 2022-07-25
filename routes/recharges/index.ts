@@ -8,4 +8,5 @@ const rechargesRouter = Router();
 
 rechargesRouter.post('/recharge-card', authCompanyMiddleware, verifyActiveCardMiddleware, 
 verifyExpiredCardMiddleware, rechargeCardController);
+
 export default rechargesRouter;

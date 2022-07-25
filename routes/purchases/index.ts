@@ -11,4 +11,5 @@ const purchaseRouter = Router();
 purchaseRouter.post('/purchases', authEmployeeMiddleware, verifyActiveCardMiddleware, 
 verifyExpiredCardMiddleware, verifyBusinessMiddleware, 
 calculateCardBalanceMiddleware, purchaseController);
+
 export default purchaseRouter;

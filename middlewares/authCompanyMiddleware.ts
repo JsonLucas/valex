@@ -4,27 +4,21 @@ import { companyRepository, employeeRepository } from "../repositories";
 const authCompanyMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const { apikey } = req.headers; // zadKLNx.DzvOVjQH01TumGl2urPjPQSxUbf67vs0
     const { body } = req;
-    try{
-        if(apikey){
-            const company = await companyRepository.findByApiKey(apikey.toString());
-            if(company.rowCount > 0){
-                const employee = await employeeRepository.verifyEmployee(body.email, company.rows[0].id);
-                if(employee.rowCount > 0){
-                    res.locals.data = {
-                        ...body, 
-                        name: employee.rows[0].fullName, 
-                        employeeId: employee.rows[0].id
-                    };
-                    next();
-                    return;
-                }
-            }
-        }
-        res.status(401).send('you must have an api key.');
-    }catch(e: any){
-        console.log(e.message);
-        res.sendStatus(500);
-    }
+    if (!apikey) throw { code: 401, error: 'you must have an api key.' };
+
+    const company = await companyRepository.findByApiKey(apikey.toString());
+    if (!company) throw { code: 404, error: 'company not found.' };
+
+    const employee = await employeeRepository.verifyEmployee(body.email, company.id);
+    if (!employee) throw { code: 404, error: 'employee not found.' };
+    
+    res.locals.data = {
+        ...body,
+        name: employee.name,
+        employeeId: employee.id
+    };
+    next();
+    return;
 }
 
 export default authCompanyMiddleware;

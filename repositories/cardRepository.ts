@@ -1,5 +1,4 @@
-import dbConnection from "../database/dbConnection";
-import { mapObjectToUpdateQuery } from "../utils/sqlUtils.js";
+import prisma from "../database/database";
 
 export type TransactionTypes =
   | "groceries"
@@ -17,7 +16,6 @@ export interface Card {
   expirationDate: string;
   password?: string | null;
   isVirtual: boolean;
-  originalCardId?: number | null;
   isBlocked: boolean;
   type: TransactionTypes;
 }
@@ -26,42 +24,22 @@ export type CardInsertData = Omit<Card, "id">;
 export type CardUpdateData = Partial<Card>;
 
 export async function find() {
-  const result = await dbConnection.query<Card>("SELECT * FROM cards");
-  return result.rows;
+  const query = await prisma.cards.findMany();
+  return query;
 }
 
 export async function findById(id: number) {
-  const { rowCount, rows } = await dbConnection.query<Card, [number]>(
-    "SELECT * FROM cards WHERE id=$1",
-    [id]
-  );
-
-  return { rowCount, rows };
+  const query = await prisma.cards.findUnique({
+    where: { id }
+  });
+  return query;
 }
 
 export async function findByTypeAndEmployeeId(type: TransactionTypes, employeeId: number) {
-  const { rowCount, rows } = await dbConnection.query<Card, [TransactionTypes, number]>(
-    `SELECT * FROM cards WHERE type=$1 AND "employeeId"=$2`,
-    [type, employeeId]
-  );
-
-  return { rowCount, rows };
-}
-
-export async function findByCardDetails(
-  number: string,
-  cardholderName: string,
-  expirationDate: string
-) {
-  const result = await dbConnection.query<Card, [string, string, string]>(
-    ` SELECT 
-        * 
-      FROM cards 
-      WHERE number=$1 AND "cardholderName"=$2 AND "expirationDate"=$3`,
-    [number, cardholderName, expirationDate]
-  );
-
-  return result.rows[0];
+  const query = await prisma.cards.findFirst({
+    where:{ employeeId, type }
+  });
+  return query;
 }
 
 export async function insert(cardData: CardInsertData) {
@@ -71,69 +49,46 @@ export async function insert(cardData: CardInsertData) {
     cardholderName,
     securityCode,
     expirationDate,
-    password,
     isVirtual,
-    originalCardId,
     isBlocked,
     type,
   } = cardData;
-
-  dbConnection.query(
-    `
-    INSERT INTO cards ("employeeId", number, "cardholderName", "securityCode",
-      "expirationDate", password, "isVirtual", "originalCardId", "isBlocked", type)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-  `,
-    [
-      employeeId,
-      number,
-      cardholderName,
-      securityCode,
-      expirationDate,
-      password,
-      isVirtual,
-      originalCardId,
-      isBlocked,
-      type,
-    ]
-  );
-}
-
-export async function update(id: number, cardData: CardUpdateData) {
-  const { objectColumns: cardColumns, objectValues: cardValues } =
-    mapObjectToUpdateQuery({
-      object: cardData,
-      offset: 2,
-    });
-
-  dbConnection.query(
-    `
-    UPDATE cards
-      SET ${cardColumns}
-    WHERE $1=id
-  `,
-    [id, ...cardValues]
-  );
+  const insert = await prisma.cards.create({
+    data: { 
+      employeeId, number, cardholderName, securityCode, 
+      expirationDate, isBlocked, isVirtual, type, password: ''
+    }
+  });
+  return insert;
 }
 
 export const activateCard = async (id: number, password: string) => {
-  const sql = `UPDATE cards SET password=$1, "isBlocked"=$2 WHERE id=$3`;
-  const { rowCount } = await dbConnection.query(sql, [password, false, id]);
-  return { rowCount };
+  const update = await prisma.cards.update({
+    data: { password },
+    where: { id }
+  }); 
+  return update;
 }
 
 export const unlockCard = async (id: number) => {
-  const sql = `UPDATE cards SET "isBlocked"=$1 WHERE id=$2`;
-  const { rowCount } = await dbConnection.query(sql, [false, id]);
-  return { rowCount };
+  const unlock = await prisma.cards.update({
+    data: { isBlocked: false },
+    where: { id }
+  });
+  return unlock;
 }
 
 export const lockCard = async (id: number) => {
-  const sql = `UPDATE cards SET "isBlocked"=$1 WHERE id=$2`;
-  const { rowCount } = await dbConnection.query(sql, [true, id]);
-  return { rowCount };
+  const lock = await prisma.cards.update({
+    data: { isBlocked: true },
+    where: { id }
+  });
+  return lock;
 }
 
 export async function remove(id: number) {
-  dbConnection.query<any, [number]>("DELETE FROM cards WHERE id=$1", [id]);
+  const unlink = await prisma.cards.delete({
+    where:{ id }
+  });
+  return unlink;
 }

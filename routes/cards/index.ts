@@ -26,6 +26,7 @@ cardRouter.put('/lock-card', authEmployeeMiddleware, verifyActiveCardMiddleware,
 verifyExpiredCardMiddleware, lockCardController);
 
 cardRouter.get('/transactions', authEmployeeMiddleware, calculateCardBalanceMiddleware, cardBalanceController);
-//trocar esse auth middleware
 
 export default cardRouter;
+
+//https://valex-project-jsonlucas.herokuapp.com/ <- link do deploy

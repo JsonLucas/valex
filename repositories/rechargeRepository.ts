@@ -1,33 +1,34 @@
-import dbConnection from '../database/dbConnection';
+import prisma from '../database/database';
 
 export interface Recharge {
-  id: number;
   cardId: number;
-  timestamp: Date;
   amount: number;
 }
-export type RechargeInsertData = Omit<Recharge, "id" | "timestamp">;
+
 
 export async function findByCardId(cardId: number) {
-  const { rowCount, rows } = await dbConnection.query<Recharge, [number]>(
-    `SELECT * FROM recharges WHERE "cardId"=$1`,
-    [cardId]
-  );
-
-  return { rowCount, rows };
+  const query = await prisma.recharges.findMany({
+    where: { cardId }
+  });
+  return query;
 }
 
-export async function insert(rechargeData: RechargeInsertData) {
-  const { cardId, amount } = rechargeData;
-  const { rowCount } = await dbConnection.query<any, [number, number]>(
-    `INSERT INTO recharges ("cardId", amount) VALUES ($1, $2)`,
-    [cardId, amount]
-  );
-  return { rowCount };
+export async function insert(rechargeData: Recharge) {
+  const { cardId, amount } = rechargeData
+  const insert = await prisma.recharges.create({
+    data: {
+      cardId,
+      amount
+    }
+  });
+  return insert;
 }
 
 export const calculateCardBalance = async (id: number) => {
-  const sql = `SELECT SUM(amount) FROM recharges WHERE "cardId"=$1`;
-  const { rows } = await dbConnection.query(sql, [id]);
-  return { sum: rows[0].sum };
+  const countRecharges = await prisma.recharges.count({
+    where: {
+      id
+    }
+  });
+  return countRecharges;
 }

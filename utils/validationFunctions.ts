@@ -1,4 +1,4 @@
-import { validateCardSchema } from "./validationSchemas";
+import { validateCardSchema } from "./schemas/validationSchemas";
 
 export const validateCardType = (cardType: string) => {
     const { error } = validateCardSchema.validate({ cardType });

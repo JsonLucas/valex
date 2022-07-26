@@ -1,11 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
+import React, { Fragment } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import ScreenNavigations from './src/screens';
 
 export default function App() {
   return (
-    <View>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ScreenNavigations />
   );
 }

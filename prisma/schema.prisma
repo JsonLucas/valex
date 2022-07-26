@@ -13,7 +13,7 @@ datasource db {
 model companies {
   id Int @id @default(autoincrement())
   name String @unique
-  login String
+  login String @unique
   password String
   apiKey String @unique
   employee employees[]

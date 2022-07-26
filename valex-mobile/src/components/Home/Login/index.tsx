@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { Image, Text, View, TextInput, TouchableOpacity, SafeAreaView } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
-import styles from "../styles";
+import styles, { dropdownStyles } from "../styles";
 
 export default function Login({navigation}: any) { //trocar tipagem
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [loginType, setLoginType] = useState<string>('');
+    const login = async () => {
+        const body = { email, password, accountType: loginType };
+        try{}catch(e: any){
+            console.error(e);
+        }
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
@@ -38,7 +45,7 @@ export default function Login({navigation}: any) { //trocar tipagem
                             />
                         </View>
                         <SelectDropdown data={['Company', 'Employee']} onSelect={(item, index) => {
-                                console.log(item, index);
+                                setLoginType(item);
                             }} 
                             buttonTextAfterSelection={(item, index) => {
                                 return item
@@ -47,8 +54,14 @@ export default function Login({navigation}: any) { //trocar tipagem
                                 return item
                             }} 
                             defaultButtonText='-Tipo de login-'
+                            dropdownIconPosition="left"
+                            rowStyle={{padding: '5px'}}
+                            rowTextStyle={{fontSize: 16}}
+                            buttonTextStyle={{fontWeight: 'bold'}}
+                            buttonStyle={dropdownStyles.selectStyle}
+                            dropdownStyle={dropdownStyles.dropdownStyle}
                         />
-                        <TouchableOpacity style={styles.buttonStyle}>
+                        <TouchableOpacity style={styles.buttonStyle} onPress={login}>
                             Entrar
                         </TouchableOpacity>
                     </View>

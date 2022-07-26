@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#F0E68C',
     },
     rowTitlePage: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
         width: '50%',
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     titleStyle: {
         fontSize: 30,
         fontWeight: 'bold',
-        color: 'darkred' 
+        color: 'darkred'
     },
     fieldsSection: {
         width: '90%',
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     },
     fieldsStyle: {
         width: '100%',
-        padding: '10px', 
+        padding: '10px',
         border: 'none',
         backgroundColor: 'white',
         fontSize: 15
@@ -64,4 +64,19 @@ const styles = StyleSheet.create({
     }
 });
 
+export const dropdownStyles = {
+    selectStyle: {
+        width: '100%',
+        padding: '10px',
+        backgroundColor: '#eee',
+        marginBottom: '10px'
+    },
+    dropdownStyle: {
+        backgroundColor: 'lightgrey',
+        padding: '5px'
+    },
+    rowStyles: {
+        padding: '5px'
+    }
+}
 export default styles;

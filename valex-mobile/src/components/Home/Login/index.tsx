@@ -9,7 +9,9 @@ export default function Login({navigation}: any) { //trocar tipagem
     const [loginType, setLoginType] = useState<string>('');
     const login = async () => {
         const body = { email, password, accountType: loginType };
-        try{}catch(e: any){
+        try{
+            navigation.navigate('Cards');
+        }catch(e: any){
             console.error(e);
         }
     }

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 interface Error {
     code: number,
-    error: string | any | undefined
+    error: string | object,
     message?: string
 }
 

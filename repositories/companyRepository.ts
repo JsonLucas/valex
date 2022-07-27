@@ -12,3 +12,7 @@ export async function findByApiKey(apiKey: string) {
   });
   return company;
 }
+
+export const findByName = async (name: string) => {}
+
+export const insert = async (data: any) => {}

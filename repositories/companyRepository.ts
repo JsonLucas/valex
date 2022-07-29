@@ -1,9 +1,10 @@
 import prisma from "../database/database";
 
 export interface Company {
-  id: number;
-  name: string;
-  apiKey?: string;
+  name: string,
+  apiKey: string,
+  login: string,
+  password: string
 }
 
 export async function findByApiKey(apiKey: string) {
@@ -15,4 +16,8 @@ export async function findByApiKey(apiKey: string) {
 
 export const findByName = async (name: string) => {}
 
-export const insert = async (data: any) => {}
+export const insert = async (data: Company) => {
+  return await prisma.companies.create({
+    data: { ...data }
+  });
+}

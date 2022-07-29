@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { decodeToken } from "../utils/tokenUtils";
 import { validateSignIn, validateSignUp } from "../utils/validationFunctions";
 
 export const signUpMiddleware = async (req: Request, res: Response, next: NextFunction) => {

@@ -2,14 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { employeeRepository } from "../repositories";
 
 const authEmployeeMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, id } = req.headers;
+    const { authorization } = req.headers;
     const { body } = req;
-    try {
-        let queryEmail;
-        if(body.email){ queryEmail = body.email }
-        else if(email){ queryEmail = email }
-        const employee = await employeeRepository.findByEmail(queryEmail);
-        if (employee) {
+    const { email, id } = body;
+    if(email){
+        const employee = await employeeRepository.findByEmail(email);
+        if (!employee) throw { code: 404, error: 'employee not found' }
             if (Object.keys(body).length !== 0) {
                 res.locals.data = {
                     employeeId: employee.id,
@@ -23,11 +21,6 @@ const authEmployeeMiddleware = async (req: Request, res: Response, next: NextFun
             }
             next();
             return;
-        }
-        res.sendStatus(404);
-    } catch (e: any) {
-        console.log(e.message);
-        res.sendStatus(500);
     }
 }
 

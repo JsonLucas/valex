@@ -28,3 +28,11 @@ export const verifyEmployee = async (email: string, id: number) => {
   });
   return employee;
 }
+
+export const create = async (data: any) => {
+  return await prisma.employees.create({
+    data: {
+      ...data
+    }
+  });
+}

@@ -26,7 +26,17 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: '10px',
         color: 'white',
-        padding: '5px'
+        padding: '10px',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
+    },
+    informationRow: {
+        flexDirection: 'row',
+        justifyContent: "space-between"
+    },
+    informationText: {
+        fontSize: 15,
+        color: 'white'
     }
 });
 

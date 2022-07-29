@@ -1,6 +1,8 @@
 export interface ISignUser {
-    companyName: string,
-    login: string,
+    name?: string,
+    cpf?: string,
+    companyName?: string,
+    login?: string,
     password: string,
     confirmPassword: string,
     accountType: string

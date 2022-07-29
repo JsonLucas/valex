@@ -7,7 +7,9 @@ export const validateCardSchema = joi.object({
 export const signUpSchema = joi.object({
     companyName: joi.string().required(),
     accountType: joi.string().equal('Employee', 'Company').required(),
+    name: joi.string().required(),
     login: joi.string().required(),
+    cpf: joi.string().max(11),
     password: joi.string().required(),
     confirmPassword: joi.ref('password')
 });
